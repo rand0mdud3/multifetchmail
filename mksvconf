@@ -1,0 +1,33 @@
+#!/bin/sh
+
+SVCONF=/etc/supervisord.conf
+
+cp /etc/supervisord.conf.templ $SVCONF
+for i in /data/*
+do
+	if [ -e "$i/etc/fetchmailrc" ]; then
+            CONF=$(basename $i)
+	    cat << EOF >>$SVCONF
+
+[program:$CONF]
+environment=FETCHMAILHOME=$i/etc
+command=/usr/bin/fetchmail -t 60 --syslog -e 50 -d 300 --nodetach
+stderr_logfile = $i/log/fetchmail-stderr.log
+stdout_logfile = $i/log/fetchmail-stdout.log
+EOF
+
+            mkdir -p $i/log
+            chown fetchmail:fetchmail $i/etc
+            chown fetchmail:fetchmail $i/etc/fetchmailrc
+            chown fetchmail:fetchmail $i/log
+            chmod 0600 $i/etc/fetchmailrc
+            rm $i/etc/fetchmail.pid
+        fi
+done
+
+mkdir /data/log 2>/dev/null
+chown fetchmail.fetchmail /data/log
+chown fetchmail.fetchmail $SVCONF
+
+rm /tmp/supervisor.sock 2>/dev/null
+

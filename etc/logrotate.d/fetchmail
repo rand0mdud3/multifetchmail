@@ -1,0 +1,5 @@
+/data/log/fetchmail.log /data/*/log/*.log {
+    missingok
+    sharedscripts
+    delaycompress
+}
