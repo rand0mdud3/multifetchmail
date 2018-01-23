@@ -14,5 +14,7 @@ create multiple local `etc/<name>/fetchmailrc` files and adjust it to your own n
 ```
 
 For each <name> configuration a separate fetchmail instance will be started (needed for IMAP idle processing). The fetchmail processes will be monitored by supervisord.
+The web interface for supervisord is enabled at port 9101.
 
-The fetchmail container logs directly into the mountpoint `log/<name>/fetchmail.log`
+The supervisord process logs directly into the mountpoint `/data/log/supervisord.log`. Each fetchmail process logs into a separate log directoy /data/<name/log/fetchmail-stdout.log
+ and /data/<name/log/fetchmail-stderr.log

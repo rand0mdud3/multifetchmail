@@ -11,7 +11,7 @@ do
 
 [program:$CONF]
 environment=FETCHMAILHOME=$i/etc
-command=/usr/bin/fetchmail -t 60 --syslog -e 50 -d 300 --nodetach
+command=/usr/bin/fetchmail -d 300 --nodetach $FETCHMAIL_OPTS
 stderr_logfile = $i/log/fetchmail-stderr.log
 stdout_logfile = $i/log/fetchmail-stdout.log
 EOF
@@ -22,6 +22,8 @@ EOF
             chown fetchmail:fetchmail $i/log
             chmod 0600 $i/etc/fetchmailrc
             rm $i/etc/fetchmail.pid
+			touch $i/log/fetchmail-stderr.log
+			touch $i/log/fetchmail-stdout.log
         fi
 done
 

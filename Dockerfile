@@ -1,6 +1,8 @@
 FROM alpine:latest
 MAINTAINER mabdev@aberlenet.de
 
+ENV FETCHMAIL_OPTS="-t 60 -e 50"
+
 #install necessary packages
 RUN apk update; \
     apk upgrade; \
