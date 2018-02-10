@@ -1,4 +1,4 @@
-/data/log/fetchmail.log /data/*/log/*.log {
+/var/log/messages {
     missingok
     sharedscripts
     delaycompress

@@ -1,12 +1,16 @@
 FROM alpine:latest
-MAINTAINER mabdev@aberlenet.de
+LABEL maintainer="mabdev@aberlenet.de"
 
 ENV FETCHMAIL_OPTS="-t 60 -e 50"
 
 #install necessary packages
 RUN apk update; \
     apk upgrade; \
-    apk add fetchmail openssl logrotate supervisor;
+    apk add fetchmail openssl supervisor; \
+    apk add runit tzdata \
+    && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
+    && echo "Europe/Berlin" >  /etc/timezone \
+    && echo "Europe/Berlin" > /etc/TZ
 
 #set workdir
 WORKDIR /data
@@ -16,7 +20,6 @@ RUN chown fetchmail:fetchmail /data; \
     chmod 0744 /data; 
 
 #add logrotate fetchmail config
-ADD etc/logrotate.d/fetchmail /etc/logrotate.d/fetchmail
 #add startup script
 ADD start.sh /bin/start.sh
 ADD mksvconf /bin/mksvconf

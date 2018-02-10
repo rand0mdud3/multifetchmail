@@ -11,19 +11,14 @@ do
 
 [program:$CONF]
 environment=FETCHMAILHOME=$i/etc
-command=/usr/bin/fetchmail -d 300 --nodetach $FETCHMAIL_OPTS
-stderr_logfile = $i/log/fetchmail-stderr.log
-stdout_logfile = $i/log/fetchmail-stdout.log
+command=/usr/bin/fetchmail $FETCHMAIL_OPTS -d 300 --nodetach --syslog
+stderr_logfile = syslog
+stdout_logfile = syslog
 EOF
-
-            mkdir -p $i/log
             chown fetchmail:fetchmail $i/etc
             chown fetchmail:fetchmail $i/etc/fetchmailrc
-            chown fetchmail:fetchmail $i/log
             chmod 0600 $i/etc/fetchmailrc
             rm $i/etc/fetchmail.pid
-			touch $i/log/fetchmail-stderr.log
-			touch $i/log/fetchmail-stdout.log
         fi
 done
 

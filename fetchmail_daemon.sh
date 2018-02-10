@@ -3,5 +3,5 @@ echo "Start supervisor"
 supervisord -c /etc/supervisord.conf
 
 while true; do
-	tail -f /data/*/log/*.log
+	tail -f /var/log/messages
 done	
