@@ -1,5 +1,0 @@
-/var/log/messages {
-    missingok
-    sharedscripts
-    delaycompress
-}
