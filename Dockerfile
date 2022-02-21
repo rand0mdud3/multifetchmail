@@ -1,36 +1,24 @@
 FROM alpine:latest
-LABEL maintainer="mabdev@aberlenet.de"
+LABEL maintainer="rand0mdud31@gmail.com"
 
-ENV FETCHMAIL_OPTS="-t 60 -e 50"
+RUN apk add --no-cache openssl openssl-dev supervisor git gcc musl-dev flex bison runit tzdata autoconf automake gettext gettext-dev make
 
-#install necessary packages
-RUN apk update; \
-    apk upgrade; \
-    apk add fetchmail openssl supervisor; \
-    apk add runit tzdata \
-    && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
-    && echo "Europe/Berlin" >  /etc/timezone \
-    && echo "Europe/Berlin" > /etc/TZ
+#RUN addgroup fetchmail
+RUN adduser -D -H -s /bin/false fetchmail
 
-#set workdir
-WORKDIR /data
+WORKDIR /tmp
+#RUN git clone -b legacy_6x https://gitlab.com/fetchmail/fetchmail.git
+RUN git clone -b legacy_6x https://gitlab.com/rand0mdud3/fetchmail.git
+WORKDIR fetchmail
+RUN ./autogen.sh
+RUN ./configure --prefix=/usr
+RUN make
+RUN make install
 
-#setup fetchmail stuff, fetchmail user is created by installing the fetchmail package
-RUN chown fetchmail:fetchmail /data; \
-    chmod 0744 /data; 
+WORKDIR /tmp
+RUN rm -rf fetchmail
 
-#add logrotate fetchmail config
-#add startup script
-ADD start.sh /bin/start.sh
-ADD mksvconf /bin/mksvconf
-ADD supervisord.conf.templ /etc/supervisord.conf.templ
+COPY root/ /
 
-#add fetchmail_daemon script
-ADD fetchmail_daemon.sh /bin/fetchmail_daemon.sh
-
-#set startup script rights
-RUN chmod 0700 /bin/start.sh; \
-    chown fetchmail:fetchmail /bin/fetchmail_daemon.sh
-
-VOLUME ["/data"]
-CMD ["/bin/sh", "/bin/start.sh"]
+VOLUME ["/config"]
+CMD ["/start.sh"]
