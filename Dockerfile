@@ -17,6 +17,7 @@ RUN make install
 
 WORKDIR /tmp
 RUN rm -rf fetchmail
+RUN apk del openssl-dev git gcc musl-dev flex bison autoconf automake gettext-dev make
 
 COPY root/ /
 
