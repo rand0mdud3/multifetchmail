@@ -3,7 +3,6 @@ LABEL maintainer="rand0mdud31@gmail.com"
 
 RUN apk add --no-cache openssl openssl-dev supervisor git gcc musl-dev flex bison tzdata autoconf automake gettext gettext-dev make
 
-#RUN addgroup fetchmail
 RUN adduser -D -H -s /bin/false fetchmail
 
 WORKDIR /tmp
