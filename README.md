@@ -1,11 +1,11 @@
 # docker-fetchmail
 
-alpine linux with fetchmail, logrotate and supervisord
+alpine linux with current legacy\_6x fetchmail and supervisord
 
 ```
-docker run -it --name fetchmail -v /fetchmail_config:/data maberle/multifetchmail
+docker run -it --name fetchmail -v /fetchmail_config:/config rand0mdud3/multifetchmail
 ```
-# configuration
+# Configuration
 
 create multiple fetchmailrc files named as '<name>.fetchmailrc' and adjust it to your own needs.
 
