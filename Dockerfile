@@ -7,8 +7,7 @@ RUN apk add --no-cache openssl openssl-dev supervisor git gcc musl-dev flex biso
 RUN adduser -D -H -s /bin/false fetchmail
 
 WORKDIR /tmp
-#RUN git clone -b legacy_6x https://gitlab.com/fetchmail/fetchmail.git
-RUN git clone -b legacy_6x https://gitlab.com/rand0mdud3/fetchmail.git
+RUN git clone -b legacy_6x https://gitlab.com/fetchmail/fetchmail.git
 WORKDIR fetchmail
 RUN ./autogen.sh
 RUN ./configure --prefix=/usr
