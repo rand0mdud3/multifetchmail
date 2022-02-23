@@ -52,3 +52,11 @@ Not that some servers have broken IDLE implementation but still support it (it i
 ```
 
 the `idletimeout` is also important. The default value in RFCs is around ~30 minutes, but alas a lot of servers don't respect that RFC. For e.g., in my experience, gmail drops connection after ~10min. Setting this value below your provider's timeout will guarantee IDLE works reliably.
+
+## Reference
+
+https://github.com/rand0mdud3/multifetchmail
+
+## Thanks
+
+@maberle for putting together maberle/multifetchmail which this container is based on.
