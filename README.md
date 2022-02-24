@@ -2,7 +2,7 @@
 
 ## What
 
-alpine linux with current legacy\_6x fetchmail and supervisord
+alpine linux with current legacy\_6x fetchmail and s6-overlay
 
 ## Why
 
@@ -11,7 +11,7 @@ To have the ability to receive your emails within seconds, without having to go 
 ## Install
 
 ```
-docker run -it --name fetchmail -v /fetchmail_config:/config rand0mdud3/multifetchmail
+docker run -it --name fetchmail -v ./fetchmail-config:/config rand0mdud3/multifetchmail
 ```
 
 in a docker compose:
