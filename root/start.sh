@@ -1,13 +1,13 @@
 #!/bin/sh
 
-SVCONF=/etc/supervisord.conf
+SVCONF=/etc/services.d
 FETCHMAILBASE=/var/lib/fetchmail.d
 
 function addconfig {
     RCCONFIG=$1
     CONF=$2
 
-    echo addconfig $RCCONFIG as $CONF
+    echo "Add config $RCCONFIG as $CONF"
 
     FMRC=$FETCHMAILBASE/$CONF/fetchmailrc
 
@@ -15,30 +15,38 @@ function addconfig {
     cp $RCCONFIG $FMRC
 
     chown -R fetchmail:fetchmail $FETCHMAILBASE/$CONF
-    chmod 0400 $FMRC
-
-	cat << EOF >>$SVCONF
-
-[program:$CONF]
-environment=FETCHMAILHOME=$FETCHMAILBASE/$CONF
-command=/usr/bin/fetchmail -v --nodetach --nosyslog --pidfile /tmp/fetchmail-$CONF.pid
-autorestart=true
-user=fetchmail
-startsecs=2
-startretries=10000
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-EOF
     chmod 0600 $FMRC
+
+    SVCDIR=$SVCONF/$CONF
+    mkdir -p $SVCDIR
+    SVCRUN=$SVCDIR/run
+    SVCFINISH=$SVCDIR/finish
+    cat << EOF >>$SVCRUN
+#!/bin/sh
+export FETCHMAILHOME=$FETCHMAILBASE/$CONF
+export HOME=$FETCHMAILBASE/$CONF
+exec s6-setuidgid fetchmail /usr/bin/fetchmail -v --nodetach --nosyslog --pidfile /tmp/fetchmail-$CONF.pid
+EOF
+    chmod 0700 $SVCRUN
+
+    cat << 'EOF' >>$SVCFINISH
+#!/bin/sh
+if test "$1" -eq 256 ; then
+    echo "Killed by signal $2" >&2
+else
+    echo "Terminated with exit code $1" >&2
+fi
+sleep 5
+EOF
+    chmod 0700 $SVCFINISH
 }
 
 echo "Init fetchmailrc(s)"
 
 rm -rf $FETCHMAILBASE
 mkdir -p $FETCHMAILBASE
-cp /etc/supervisord.conf.templ $SVCONF
+rm -rf $SVCONF
+mkdir -p $SVCONF
 
 for i in $(find /config -name "*.fetchmailrc")
 do
@@ -46,5 +54,5 @@ do
     addconfig $i $CONF
 done
 
-echo "Start supervisor"
-supervisord -c /etc/supervisord.conf
+echo "Start S6"
+exec /init
