@@ -2,16 +2,16 @@
 
 ## What
 
-tiny container (<6MiB) using alpine linux with current legacy\_6x fetchmail and dumb-init
+tiny container (<10MiB) using alpine Linux with current legacy\_6x fetchmail and dumb-init
 
 ## Why
 
-To have the ability to receive your emails within seconds, without having to go through the hassle of setting up your own domain and MX relay. Use your favorite services that provides IMAP support and you too can get instantaneous emails delivered to your machine. Having a container makes it super easy to keep up to date with most recent fetchmail, as well as runnning it behind a VPN if you are paranoid.
+To have the ability to receive your emails within seconds, without having to go through the hassle of setting up your own domain and MX relay. Use your favorite services that provides IMAP support and you too can get instantaneous emails delivered to your machine. Having a container makes it super easy to keep up to date with most recent fetchmail, as well as running it behind a VPN if you are paranoid. Don't forget to set the timezone (TZ env variable) to get correct timestamps on incoming emails.
 
 ## Install
 
 ```
-docker run -it --name fetchmail -v ./fetchmail-config:/config rand0mdud3/multifetchmail
+docker run -it --name fetchmail --env TZ=UTC -v ./fetchmail-config:/config rand0mdud3/multifetchmail
 ```
 
 in a docker compose:
@@ -20,6 +20,8 @@ in a docker compose:
   fetchmail:
     container_name: fetchmail
     image: rand0mdud3/multifetchmail
+    environment:
+      - TZ=UTC
     volumes:
       - ./fetchmail-config:/config
     restart: unless-stopped
