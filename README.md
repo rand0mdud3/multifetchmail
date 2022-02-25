@@ -2,7 +2,7 @@
 
 ## What
 
-alpine linux with current legacy\_6x fetchmail and s6-overlay
+tiny container (<6MiB) using alpine linux with current legacy\_6x fetchmail and dumb-init
 
 ## Why
 
@@ -29,8 +29,7 @@ in a docker compose:
 
 Create multiple fetchmailrc files named as `<imapserver>.fetchmailrc` and adjust them to your own needs.
 
-For each fetchmailrc file a separate fetchmail instance will be started (needed for IMAP idle processing since only one mail server can be accessed in this mode by fetchmail). The fetchmail processes will be monitored by supervisord.
-The supervisord processes are logging to stdout/stderr. You can configure docker to pipe this to journald.
+For each fetchmailrc file a separate fetchmail instance will be started (needed for IMAP idle processing since only one mail server can be accessed in this mode by fetchmail). Every output goes to stdout/stderr. fetchmail processes are restarted endlessly with a 5s delay.
 
 Example fetchmail config(s) that you would store in the `./fetchmail-config` folder with the example above. Replace `<templated stuff>` with what works for you.
 
