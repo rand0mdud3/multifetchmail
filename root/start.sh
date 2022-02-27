@@ -46,11 +46,7 @@ do
     CONF=$(basename $i .fetchmailrc)
     addconfig $i $CONF
 done
-cat << EOF >>$INIT
-while true; do
-    sleep 1d
-done
-EOF
+echo "wait" >>$INIT
 
 echo "Start dumb init"
 exec $INIT
