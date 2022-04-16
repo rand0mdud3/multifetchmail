@@ -13,6 +13,7 @@ RUN make install
 FROM alpine:latest
 RUN adduser -D -H -s /bin/false fetchmail
 COPY root/ /
+COPY --from=builder /lib/libcrypto.so.1.1 /lib/
 COPY --from=builder /tmp/fetchmail-install/bin/fetchmail /usr/bin/dumb-init /usr/bin/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
