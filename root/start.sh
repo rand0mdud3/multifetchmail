@@ -35,6 +35,7 @@ cp "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
 echo "$TIMEZONE" > /etc/timezone
 
 echo "Init fetchmailrc(s)"
+rm -f /tmp/fetchmail-*.pid
 rm -rf $FETCHMAILBASE
 mkdir -p $FETCHMAILBASE
 rm -rf $SVCONF
